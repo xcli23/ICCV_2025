@@ -7,13 +7,13 @@ white_model=promtist #vicuna-13b vicuna-7b llama2-7b promtist sft
 black_model=dreamlike # sd1.5 dreamlike sdXL
 optimizer=spsa #mmt spsa 
 h=0.05
-lr=1e-3 #1e-5 2e-5 5e-5 1e-4 1e-1 1e-2
+lr=1e-3
 batch_size=2    #1 --> single, other --> batch
 epochs=20
-train_samples=32 #16 32 64 128 256
+train_samples=32
 n_directions=5
 lora_rank=4 #4 8
-metric=total #"aesthetic, clip, pick, total"
+metric=total 
 gene_image=True #True False
 soft_train=True #True False
 soft_epoch=20
@@ -26,25 +26,20 @@ soft_n_directions=1
 random_proj=uniform # normal uniform
 debug=False # True False
 for seed in 14;do #14 42 81
-    # cmd="python -m debugpy --listen 5678 --wait-for-client test.py --seed $seed"
-    # 
     base_dir="./result/${dataset}/${white_model}_${black_model}_opt_${optimizer}_proj${random_proj}/samples_${train_samples}_batch${batch_size}_lora_rank${lora_rank}/ep${epochs}_dir${n_directions}_lr${lr}_h${h}"
-    
-    # 
+
     if [ "$soft_train" = "True" ]; then
         soft_params_dir="/soft_ep${soft_epoch}_lr${soft_lr}_mu${mu}/dim${intrinsic_dim}_tokens${n_prompt_tokens}_soft_n_dir${soft_n_directions}"
     else
         soft_params_dir=""
     fi
-    
-    # 
+
     output_path="${base_dir}/seed${seed}/output.txt"
     output_dir=$(dirname "$output_path")
     if [ ! -d "$output_dir" ]; then
         mkdir -p "$output_dir"
     fi
 
-    # 
     soft_output_path="${output_dir}${soft_params_dir}/seed${seed}/output.txt"
     soft_output_dir=$(dirname "$soft_output_path")
     if [ ! -d "$soft_output_dir" ]; then
