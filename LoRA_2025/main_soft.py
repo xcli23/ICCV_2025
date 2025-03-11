@@ -382,7 +382,6 @@ class ImageEvaluator:
             clip_score * self.lambda_clip + 
             pick_score * self.lambda_pick
         )
-        # 返回详细分数
         return {
             'total': final_score,
             'aesthetic': aes_score,
@@ -736,7 +735,7 @@ class WhiteBoxModel:
                 results.append(processed)
 
             print(f"white box model's outputs after processing：\n{results}")
-            print(f"白盒生成耗时: {time.time()-start_time:.2f}s")
+            # print(f"T2I time: {time.time()-start_time:.2f}s")
             return results 
         
         # 
@@ -850,7 +849,7 @@ class BlackBoxModel:
                     batch_results = await self._generate_text_batch(batch, kwargs)
                 elif self.model_type == "image":
                     # print(f"{batch}")
-                    batch_results = await self._generate_image_batch(batch, kwargs) #这里会有长度77报错
+                    batch_results = await self._generate_image_batch(batch, kwargs)
                 results.extend(batch_results)
             except RuntimeError as e:
                 print(f"black box's generation failed: {str(e)}")
@@ -1000,8 +999,8 @@ class MomentumOptimizer:
             f.write("=== Dimension-level analysis reports ===\n")
             f.write(f"Total Parameter Dimension: {grad_matrix.shape[1]}\n")
             f.write(f"Mean Gradient Absolute Value Mean: {np.mean(np.abs(dim_means)):.4f}\n")
-            f.write(f"Maximum Gradient Mean Dimension: {top10_indices[0]} (值={dim_means[top10_indices[0]]:.4f})\n")
-            f.write(f"Least stable dimension: {np.argmax(dim_stds)} (标准差={np.max(dim_stds):.4f})\n")
+            f.write(f"Maximum Gradient Mean Dimension: {top10_indices[0]} (value={dim_means[top10_indices[0]]:.4f})\n")
+            f.write(f"Least stable dimension: {np.argmax(dim_stds)} (std={np.max(dim_stds):.4f})\n")
             
             f.write("\nTop 10 active dimension:\n")
             for idx in top10_indices:
